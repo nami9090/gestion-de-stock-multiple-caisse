@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+  Enregistre une vente mutli
+{% endblock %}
+{% block content %}
+{% load humanize %}
+{% load math_filters %}
+  <!-- partial -->
+<div class="container-fluid main-panel">
+    <div>
+        <div class='card shadow-lg mb-3'>
+            <div class="card-header m-0 font-weight-bold text-primary">
+                <h3>Vente - {{ cash_register.name }}</h3>
+                <p>Caissier : {{ cashier.user.get_full_name }}</p>
+            </div>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ sale_form.as_p }}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-outline-primary btn-sm">Ajouter produit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="card shadow">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <h4>Produits ajoutés :</h4>
+                    <table class="table table-sm table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Produit</th>
+                                <th>Prix</th>
+                                <th>Quantité</th>
+                                <th>Total</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in items %}
+                            <tr>
+                                <td>{{ item.product.name }}</td>
+                                <td>{{ item.selling_price|intcomma }} {{company.currency}}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>{{ item.quantity|mul:item.selling_price|intcomma }} {{company.currency}}</td>
+                                <td>
+                                    <a href="" class="btn btn-outline-danger btn-sm">Retirer</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">Aucun produit ajouté</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <hr>
+                    <h5>
+                        <span class="fw-bold">Total :</span>
+                        <span class="text-primary">{{ sale.total_amount|intcomma }} {{ shop.currency }}</span>
+                    </h5>
+                    <h6>
+                        <span class="fw-bold" >Profit :</span>
+                        <span class="text-success">{{ sale.total_profit|intcomma }} {{ shop.currency }}</span>
+                    </h6>
+                    {% if items %}
+                        <a href="{% url 'sale_finalize_caisse_multi' %}" class="btn btn-outline-primary btn-sm">
+                            Finaliser la vente <i class="bi bi-check-square"></i>
+                        </a>
+                    {% endif %}
+                    <a href="{% url 'sale_list' %}" class="btn btn-outline-secondary btn-sm">Retour <i class="bi bi-arrow-left-square"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- partial -->
+  </div>
+  <!-- main-panel ends -->
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}
+	Produits le plus vendus
+{% endblock %}
+{% block content %}
+{% load humanize %}
+<div class="container-fluid">
+	<div class="card shadow-lg">
+		<div class="card-header">
+			<h4 class="mb-4">
+				Produits les plus vendus
+			</h4>
+		</div>
+		<div class="card-body">
+			<div class="table-responsive">
+				<table class="table table-sm table-striped">
+					<thead class="table-dark">
+						<tr>
+							<th>#</th>
+							<th>Produit</th>
+							<th>Quantité vendue</th>
+							<th>Nombre de ventes</th>
+							<th>Montant total</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for p in produits %}
+						<tr>
+							<td>{{ forloop.counter }}</td>
+							<td>{{ p.product__name }}</td>
+							<td>{{ p.quantite_vendue }}</td>
+							<td>{{ p.nombre_ventes }}</td>
+							<td>{{ p.montant_total }}</td>
+						</tr>
+						{% empty %}
+						<tr>
+							<td colspan="5" class="text-center">
+							Aucune vente trouvée
+							</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+    <h3>Détail de l'opération</h3>
+
+    <div class="card shadow-sm p-4">
+        <p><strong>Date :</strong> {{ operation.created_at|date:"d/m/Y H:i" }}</p>
+        <p><strong>Caisse :</strong> {{ operation.cash_register.name }}</p>
+        <p><strong>Caissier :</strong> {{ operation.cashier.user.username }}</p>
+        <p><strong>Type :</strong> {{ operation.get_operation_type_display }}</p>
+        <p><strong>Montant :</strong> {{ operation.amount }}</p>
+        <p><strong>Description :</strong> {{ operation.description }}</p>
+
+        <p>
+            <strong>Validation :</strong>
+            {% if operation.validated_by_admin %}
+                <span class="badge bg-success">Validée</span>
+            {% else %}
+                <span class="badge bg-warning text-dark">En attente</span>
+            {% endif %}
+        </p>
+
+        <a href="{% url 'cashoperation_list' %}" class="btn btn-primary mt-3">
+            Retour
+        </a>
+    </div>
+</div>
+
+{% endblock %}

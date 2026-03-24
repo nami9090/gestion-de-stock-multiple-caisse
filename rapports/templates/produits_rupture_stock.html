@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}
+	Produits en rupture de stock
+{% endblock %}
+{% block content %}
+{% load humanize %}
+<div class="container-fluid">
+	<div class="card">
+		<div class="card-header">
+			<h4 class="mb-4 text-danger">
+				Produits en rupture de stock
+			</h4>
+		</div>
+		<div class="card-body">
+			<div class="table-responsive">
+				<table class="table table-sm table-striped">
+					<thead class="table-dark">
+						<tr>
+							<th>#</th>
+							<th>Produit</th>
+							<th>Catégorie</th>
+							<th>Stock</th>
+							<th>Status</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for p in produits %}
+						<tr>
+							<td>{{ forloop.counter }}</td>
+							<td>{{ p.name }}</td>
+							<td>{{ p.category }}</td>
+							<td class="text-danger">{{ p.stock_value|intcomma }} {{company.currency}}</td>
+							<td>
+								<span class="badge bg-danger">
+								Rupture
+								</span>
+							</td>
+						</tr>
+						{% empty %}
+						<tr>
+							<td colspan="5" class="text-center text-success">
+								Aucun produit en rupture
+							</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+  Historique des entrees
+{% endblock %}
+{% block content %}
+{% load humanize %}
+  <!-- partial -->
+  <div class="container-fluid main-panel">
+    <div class='card shadow-lg mb-3'>
+      <div class="card-header d-flex justify-content-between m-0 font-weight-bold text-primary">
+        Historique des entrees en stock
+      </div>
+    </div>
+    <div class="card shadow-sm">
+        <div class="card-header m-0 font-weight-bold text-primary">
+          Liste des produits
+        </div>
+        <div class="card-body">
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+          <a href="{% url 'stock_entry_create' %}" class="btn btn-outline-primary mb-3 btn-sm">
+            Enregistre une entree-stock
+          </a>
+          <div class="input-group">
+              <input type="text" id="searchInput" class="form-control mb-2 " placeholder="Rechercher ici...">
+          </div>
+          <div class='table-responsive'>
+          <table class="table table-sm table-striped">
+              <thead class="table-dark">
+                 <tr>
+                    <th>#</th>
+                    <th>Produit</th>
+                    <th>Quantité</th>
+                    <th>Restant</th>
+                    <th>Coût Total</th>
+                    <th>Date</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                    {% for entry in entries %}
+                    <tr>
+                        <td>{{ entry.id }}</td>
+                        <td>{{ entry.product.name }}</td>
+                        <td>{{ entry.quantity }}</td>
+                        <td>{{ entry.remaining_quantity }}</td>
+                        <td>{{ entry.total_cost|intcomma }} {{ company.currency }}</td>
+                        <td>{{ entry.date }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">
+                            Aucune entrée enregistrée
+                        </td>
+                    </tr>
+                    {% endfor %}
+              </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- partial -->
+  </div>
+  <!-- main-panel ends -->
+{% endblock %}

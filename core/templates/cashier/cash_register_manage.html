@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block title %}
+  Creer-Caissier
+{% endblock %}
+{% block content %}
+{% load humanize %}
+<!-- Begin Page Content -->
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <div class="card mb-4 shadow-lg">
+        <div class="card-header m-0 font-weight-bold text-primary">
+            Gestion de caisse
+        </div>
+    </div>
+    <div class="card shadow">
+        <div class="card-header">
+            <h6 class="m-0 font-weight-bold text-primary">
+                mmmmmmmmmmmmmmmm
+            </h6>
+        </div>
+        <div class="card-body">
+            <h5>Créer une nouvelle caisse</h5>
+            <form method="POST">
+                {% csrf_token %}
+                {{ create_form.as_p }}
+                <button type="submit" name="create_cash_register" class="btn btn-outline-primary btn-sm">
+                    Créer
+                </button>
+            </form>
+        </div>
+    </div>
+    <div class="card">
+        <!-- Liste des caisses -->
+        <table class="table table-sm table-bordered">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Statut</th>
+                    <th>Caissiers assignés</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for caisse in cash_registers %}
+                <tr>
+                    <td>{{ caisse.name }}</td>
+
+                    <td>
+                        {% if caisse.is_active %}
+                            <span class="badge bg-success">Ouverte</span>
+                        {% else %}
+                            <span class="badge bg-danger">Fermée</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% for cashier in caisse.cashiers.all %}
+                            <span class="badge bg-info text-dark">
+                                {{ cashier.user.username }}
+                            </span>
+                        {% empty %}
+                            Aucun
+                        {% endfor %}
+                    </td>
+
+                    <td>
+                        <a href="{% url 'toggle_cash_register' caisse.id %}"
+                        class="btn btn-sm btn-warning">
+                            Ouvrir / Fermer
+                        </a>
+
+                        <!-- Assignation -->
+                        <form method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            {{ assign_form.cashier }}
+                            <input type="hidden" name="caisse_id" value="{{ caisse.id }}">
+                            <button type="submit"
+                                    name="assign_cashier"
+                                    class="btn btn-sm btn-secondary">
+                                Assigner
+                            </button>
+                        </form>
+                    </td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

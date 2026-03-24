@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}
+	Rapport financier
+{% endblock %}
+{% block content %}
+{% load humanize %}
+<div class="container-fluid">
+	<h3>Rapport Financier</h3>
+	<div class="row">
+		<div class="col-md-4 mb-3">
+			<div class="card bg-primary text-white">
+				<div class="card-body">
+					<h5>Chiffre d'affaire</h5>
+					<h3>{{ total_sales|intcomma }} {{company.currency}}</h3>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4 mb-3">
+			<div class="card bg-warning text-white">
+				<div class="card-body">
+					<h5>Coût des produits vendus</h5>
+					<h3>{{ cost_of_goods|intcomma }} {{company.currency}}</h3>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4 mb-3">
+			<div class="card bg-success text-white">
+				<div class="card-body">
+					<h5>Bénéfice</h5>
+					<h3>{{ profit|intcomma }} {{company.currency}}</h3>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

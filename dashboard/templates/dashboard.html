@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+{% block title %}
+    {{ title }}
+{% endblock %}
+{% block content %}
+{% load humanize %}
+<div class="container-fluid">
+    {% for group in request.user.groups.all %}
+    {% if group.name == "Admin" or group.name == "Gestionnaire_stock" %}
+    <hr>
+    <h3>Rapport Rapport du stock</h3>
+    <div class="row">
+        <div class="col-md-4 mb-3 ">
+            <div class="card bg-primary text-white shadow-lg">
+                <div class="card-body">
+                    <h5>Total Produits</h5>
+                    <h3>{{ total_products }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3 ">
+            <div class="card bg-secondary text-white shadow-lg">
+                <div class="card-body">
+                    <h5>Total Stock</h5>
+                    <h3>{{ total_stock }}</h3>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="col-md-3 mb-3">
+            <div class="card bg-warning text-white shadow-lg">
+                <div class="card-body">
+                    <h5>Total Ventes</h5>
+                    <h3>{{ total_sales|intcomma }} {{ company.currency }}</h3>
+                </div>
+            </div>
+        </div> -->
+        <div class="col-md-4 mb-3">
+            <div class="card bg-success text-white shadow-lg">
+                <div class="card-body">
+                    <h5>Total Fournisseurs</h5>
+                    <h3>{{ total_suppliers }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% if group.name == "Caisse" or group.name == "Admin" %}
+    <hr>
+    <h3>Rapport Financier</h3>
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5>Chiffre d'affaire</h5>
+                    <h3>{{ total_sales|intcomma }} {{company.currency}}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <h5>Coût des produits vendus</h5>
+                    <h3>{{ cost_of_goods|intcomma }} {{company.currency}}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5>Bénéfice</h5>
+                    <h3>{{ profit|intcomma }} {{company.currency}}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <h3>Ventes et revenus par jour</h3>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <div class="card bg-dark text-white">
+                <div class="card-body">
+                    <h5>Ventes aujourd'hui</h5>
+                    <h3>{{ ventes_jour }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5>Revenu du jour</h5>
+                    <h3>{{ revenu_jour|intcomma }} {{company.currency}}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% if group.name == "Admin" or group.name == "Caisse" %}
+    <div class="row">
+      <div class="col-lg-12 d-flex grid-margin stretch-card mb-3">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex flex-wrap justify-content-between">
+              <h4 class="card-title mb-3">Ventes des 6 derniers mois (en {{ company.currency }})</h4>
+            </div>
+            <div class="row">
+              <div class="col-lg-9">
+                <div class="chart-container mt-4">
+                  <canvas id="salesChart"></canvas>
+                </div>
+              </div>
+              <div class="col-lg-3 mb-3">
+                <div>
+                  <div class="d-flex justify-content-between mb-3">
+                    <div class="text-primary font-weight-bold">Inbound (Entrées de stock)</div>
+                  </div>
+                  <div class="d-flex justify-content-between mb-3">
+                    <div class="font-weight-medium">Current</div>
+                    <div class="text-muted">{{ inbound_current_pct|floatformat:2 }}%</div>
+                  </div>
+                  <div class="d-flex justify-content-between mb-3">
+                    <div class="font-weight-medium">Average</div>
+                    <div class="text-muted">{{ inbound_average_pct|floatformat:2 }}%</div>
+                  </div>
+                  <div class="d-flex justify-content-between mb-3">
+                    <div class="font-weight-medium">Maximum</div>
+                    <div class="text-muted">{{ inbound_maximum_pct|floatformat:2  }}%</div>
+                  </div>
+                </div>
+                <hr>
+                <div class="mt-4">
+                  <div class="d-flex justify-content-between mb-3">
+                    <div class="text-primary font-weight-bold">Outbound (Ventes ou sorties)</div>
+                  </div>
+                  <div class="d-flex justify-content-between mb-3">
+                    <div class="font-weight-medium">Current</div>
+                    <div class="text-muted">{{ outbound_current_pct|floatformat:2  }}%</div>
+                  </div>
+                  <div class="d-flex justify-content-between mb-3">
+                    <div class="font-weight-medium">Average</div>
+                    <div class="text-muted">{{ outbound_average_pct|floatformat:2  }}%</div>
+                  </div>
+                  <div class="d-flex justify-content-between mb-3">
+                    <div class="font-weight-medium">Maximum</div>
+                    <div class="text-muted">{{ outbound_maximum_pct|floatformat:2  }}%</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+</div>
+
+<!-- Inclure Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Insérer les données Python dans le template de façon sécurisée -->
+
+{{ sales_data_labels|json_script:"labels-data" }}
+{{ sales_data_values|json_script:"values-data" }}
+
+
+<!-- Canvas pour le graphique -->
+<!-- <div class="chart-container" style="height: calc(100vh - 200px); width: 100%;">
+    <canvas id="salesChart"></canvas>
+</div> -->
+
+<!-- Script Chart.js -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Récupérer les données depuis json_script
+    const labels = JSON.parse(document.getElementById('labels-data').textContent);
+    const data = JSON.parse(document.getElementById('values-data').textContent);
+
+    const ctx = document.getElementById('salesChart').getContext('2d');
+    const salesChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Ventes',
+                data: data,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+});
+</script>
+
+
+{% endblock %}

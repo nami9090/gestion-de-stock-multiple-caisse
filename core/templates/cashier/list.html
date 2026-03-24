@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block title %}
+    Caissier | Liste
+{% endblock %}
+{% block content %}
+{% load humanize %}
+<!-- Begin Page Content -->
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <div class="card mb-4 shadow-lg">
+        <div class="card-header m-0 font-weight-bold text-primary">
+            Gestion des caissiers
+        </div>
+    </div>
+    <div class="card shadow">
+        <div class="card-header">
+            <h6 class="m-0 font-weight-bold text-primary">
+                Liste des caissiers
+            </h6>
+        </div>
+        <div class="card-body">
+            <a href="{% url 'cashier_create' %}" class="btn btn-outline-primary btn-sm mb-3">
+                Ajouter caissier
+            </a>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <div class="table-responsive">
+                <div class="input-group">
+                   <input type="text" id="searchInput" class="form-control mb-2" placeholder="Rechercher ici...">
+                </div>
+                <table class="table table-sm table-striped" id="dataTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Nom</th>
+                            <th>Téléphone</th>
+                            <th>Actif</th>
+                            <th>Ventes Aujourd'hui</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for cashier in cashiers %}
+                        <tr>
+                            <td>{{ cashier }}</td>
+                            <td>{{ cashier.phone }}</td>
+                            <td>
+                                {% if cashier.is_active %}
+                                    <span class="badge bg-success">Oui</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Non</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ cashier.today_sales_total|intcomma }}</td>
+                            <td>
+                                <a href="{% url 'cashier_update' cashier.id %}" class='btn btn-outline-success btn-sm'>Modifier</a>
+                                <a href="{% url 'cashier_delete' cashier.id %}" class='btn btn-outline-danger btn-sm'>Supprimer</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">
+                                Aucun(e) caissier enregistrée
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.container-fluid -->
+<script>
+    document.getElementById("searchInput").addEventListener("keyup", function () {
+    const searchValue = this.value.toLowerCase();
+    const rows = document.querySelectorAll("#dataTable tbody tr");
+
+    rows.forEach(row => {
+        const rowText = row.textContent.toLowerCase();
+        row.style.display = rowText.includes(searchValue) ? "" : "none";
+        });
+    });
+</script>
+{% endblock %}

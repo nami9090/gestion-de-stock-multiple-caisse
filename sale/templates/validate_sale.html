@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block title %}
+    Validation de vente
+{% endblock %}
+{% block content %}
+{% load humanize %}
+<!-- Begin Page Content -->
+<div class="container-fluid">
+    <!-- Page Heading -->
+    {% if sale %}
+    <div class="card shadow">
+        <div class="card-header">
+            <h6 class="m-0 font-weight-bold text-primary">
+                Validation de la vente
+            </h6>
+        </div>
+        <div class="card-body">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <div class="table-responsive">
+                <div class="input-group">
+                   <input type="text" id="searchInput" class="form-control mb-2" placeholder="Rechercher ici...">
+                </div>
+                <table class="table table-sm table-striped" id="dataTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Produit</th>
+                            <th>Quantité</th>
+                            <th>Prix</th>
+                            <th>Total</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <td>{{ item.id }}</td>
+                            <td>{{ item.product.name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.selling_price|intcomma }} {{company.currency}}</td>
+                            <td>{{ item.total_price|intcomma }} {{company.currency}}</td>
+                            <td>
+                                {% if not sale.validated_by_admin %}
+                                    <form method="POST" action="{% url 'sale:validate_sale_admin' sale.id %}">
+                                        {% csrf_token %}
+                                        <button class="btn btn-outline-success btn-sm">
+                                            Valider la vente
+                                        </button>
+                                    </form>
+                                {% else %}
+                                <span class="badge bg-outline-success btn-sm">
+                                    Vente déjà validée
+                                </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center">
+                                Aucune vente enregistrée
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-warning">
+        Aucune vente en attente de validation.
+    </div>
+    {% endif %}
+</div>
+<!-- /.container-fluid -->
+<script>
+    document.getElementById("searchInput").addEventListener("keyup", function () {
+    const searchValue = this.value.toLowerCase();
+    const rows = document.querySelectorAll("#dataTable tbody tr");
+
+    rows.forEach(row => {
+        const rowText = row.textContent.toLowerCase();
+        row.style.display = rowText.includes(searchValue) ? "" : "none";
+        });
+    });
+</script>
+{% endblock %}

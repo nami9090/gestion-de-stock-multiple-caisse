@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% block title %}
+    Historique des operations
+{% endblock %}
+{% block content %}
+{% load humanize %}
+<!-- Begin Page Content -->
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <div class="card mb-4 shadow-lg">
+        <div class="card-header m-0 font-weight-bold text-primary">
+            Historique des operations caisse
+        </div>
+    </div>
+    <div class="card shadow">
+        <div class="card-header">
+            <h6 class="m-0 font-weight-bold text-primary">
+                Liste historique
+            </h6>
+        </div>
+        <div class="card-body">
+            <a href="{% url 'cashoperation_create' %}" class="btn btn-outline-primary btn-sm mb-3">
+                Nouvelle operation
+            </a>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <div class="table-responsive">
+                <div class="input-group">
+                   <input type="text" id="searchInput" class="form-control mb-2" placeholder="Rechercher ici...">
+                </div>
+                <table class="table table-sm table-striped" id="dataTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Date</th>
+                            <th>Caisse</th>
+                            <th>Caissier</th>
+                            <th>Type</th>
+                            <th>Montant</th>
+                            <th>Validation</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for operation in operations %}
+                        <tr>
+                            <td>{{ operation.created_at|date:"d/m/Y H:i" }}</td>
+                            <td>{{ operation.cash_register.name }}</td>
+                            <td>{{ operation.cashier.user.username }}</td>
+                            <td>
+                                <span class="badge bg-info">
+                                    {{ operation.get_operation_type_display }}
+                                </span>
+                            </td>
+                            <td>
+                                <strong>{{ operation.amount|intcomma }} {{ company.currency }}</strong>
+                            </td>
+                            <td>
+                                {% if operation.validated_by_admin %}
+                                    <span class="badge bg-success">Validée</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark">En attente</span>
+                                {% endif %}
+                            </td>
+                            <td>
+
+                                {% if not operation.validated_by_admin and request.user.is_staff %}
+                                    <a href="{% url 'cashoperation_validate' operation.id %}" 
+                                    class="btn btn-sm btn-success">
+                                        Valider
+                                    </a>
+                                {% elif operation.validated_by_admin %}
+                                    <span class="badge bg-success">Validée</span>
+                                {% endif %}
+
+                                <a href="{% url 'cashoperation_detail' operation.id %}" 
+                                class="btn btn-sm btn-outline-dark">
+                                    Voir detail
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center">
+                                Aucun(e) caissier enregistrée
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.container-fluid -->
+<script>
+    document.getElementById("searchInput").addEventListener("keyup", function () {
+    const searchValue = this.value.toLowerCase();
+    const rows = document.querySelectorAll("#dataTable tbody tr");
+
+    rows.forEach(row => {
+        const rowText = row.textContent.toLowerCase();
+        row.style.display = rowText.includes(searchValue) ? "" : "none";
+        });
+    });
+</script>
+{% endblock %}

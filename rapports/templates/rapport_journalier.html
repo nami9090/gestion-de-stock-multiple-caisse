@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}
+	Rapport journalier
+{% endblock %}
+{% block content %}
+{% load humanize %}
+<div class="container-fluid">
+	<h4 class="mb-3">
+        Rapport Journalier
+        <small class="text-muted">
+            {{ today }}
+        </small>
+    </h4>
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card shadow text-center">
+                <div class="card-body">
+                    <h6>Total ventes</h6>
+                    <h3>{{ total_ventes }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow text-center">
+                <div class="card-body">
+                    <h6>Montant total</h6>
+                    <h3>{{ total_montant }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+	<div class="card">
+		<div class="card-header">
+			Rapport Journalier de vente
+		</div>
+		<div class="card-body">
+			<div class="table-responsive">
+				<table class="table table-sm table-bordered">
+			        <thead class="table-dark">
+			            <tr>
+			                <th>#</th>
+			                <th>Date</th>
+			                <th>Caissier</th>
+			                <th>Montant</th>
+			            </tr>
+			        </thead>
+			        <tbody>
+			            {% for sale in ventes %}
+			            <tr>
+			                <td>{{ forloop.counter }}</td>
+			                <td>{{ sale.created_at|date:"d/m/Y H:i" }}</td>
+			                <td>{{ sale.cashier.user.username }}</td>
+			                <td>{{ sale.total_amount }}</td>
+			            </tr>
+			            {% empty %}
+			            <tr>
+			                <td colspan="4" class="text-center">
+			                    Aucune vente aujourd'hui
+			                </td>
+			            </tr>
+			            {% endfor %}
+			        </tbody>
+		    	</table>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

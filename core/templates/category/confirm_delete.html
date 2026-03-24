@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}
+  Supression categorie | Admin
+{% endblock %}
+{% block content %}
+{% load humanize %}
+<!-- Begin Page Content -->
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <div class="card shadow-lg  border-danger">
+        <div class="card-header bg-danger text-white">
+            Confirmer la suppression
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                <h6 class='mb-3'>Voulez-vous supprimer "{{ category.name }}" ?</h6>
+                <button type="submit" class="btn btn-outline-danger btn-sm">Supprimer</button>
+                <a href="{% url 'category_list' %}" class="btn btn-outline-secondary btn-sm">Annuler</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

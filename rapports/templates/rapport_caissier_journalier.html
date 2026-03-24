@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}
+	Rapport journalier par Caissier
+{% endblock %}
+{% block content %}
+{% load humanize %}
+<div class="container-fluid">
+	<div class="card shadow-lg">
+		<div class="card-header">
+			<h4>
+		        Rapport Journalier par Caissier
+		        <small class="text-muted">{{ today }}</small>
+		    </h4>
+		</div>
+		<div class="card-body">
+			<div class="table-responsive">
+				<table class="table table-sm table-bordered">
+			        <thead class="table-dark">
+			            <tr>
+			                <th>#</th>
+			                <th>Caissier</th>
+			                <th>Nombre de ventes</th>
+			                <th>Articles vendus</th>
+			                <th>Montant total encaissé</th>
+			            </tr>
+			        </thead>
+			        <tbody>
+			            {% for r in rapport %}
+			            <tr>
+			                <td>{{ forloop.counter }}</td>
+			                <td>{{ r.register__name }}</td>
+			                <td>{{ r.nombre_ventes }}</td>
+			                <td>{{ r.articles_vendus }}</td>
+			                <td>{{ r.montant_total|intcomma }} {{company.currency}}</td>
+			            </tr>
+			            {% empty %}
+			            <tr>
+			                <td colspan="5" class="text-center">
+			                    Aucune vente aujourd'hui
+			                </td>
+			            </tr>
+			            {% endfor %}
+			        </tbody>
+			    </table>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

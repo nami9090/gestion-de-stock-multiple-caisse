@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Dashboard Admin</h1>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card p-3">
+            <h5>Total Produits</h5>
+            <h3>{{ total_products }}</h3>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-3">
+            <h5>Total Stock</h5>
+            <h3>{{ total_stock }}</h3>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-3">
+            <h5>Total Ventes</h5>
+            <h3>{{ total_sales }}</h3>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-3">
+            <h5>Total Fournisseurs</h5>
+            <h3>{{ total_suppliers }}</h3>
+        </div>
+    </div>
+</div>
+
+<hr>
+
+<div class="card p-3">
+    <h5>Ventes des 6 derniers mois</h5>
+    <canvas id="salesChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('salesChart').getContext('2d');
+const salesChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: {{ sales_data_labels|safe }},
+        datasets: [{
+            label: 'Ventes',
+            data: {{ sales_data_values|safe }},
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: false }
+        }
+    }
+});
+</script>
+
+{% endblock %}

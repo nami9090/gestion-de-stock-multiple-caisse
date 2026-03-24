@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+  Mettre a jour une vente
+{% endblock %}
+{% block content %}
+  <!-- partial -->
+  <div class="container-fluid main-panel">
+    <div class='card shadow-lg mb-3'>
+      <div class="card-header d-flex justify-content-between m-0 font-weight-bold text-primary">
+        Modifier la vente #{{ sale_form.instance.id }}
+      </div>
+      <div class='card-body'>
+        <form method="POST">
+            {% csrf_token %}
+            {{ sale_form.as_p }}
+            {{ item_form.as_p }}
+            <div class="d-flex justify-content-between">
+                <a href="{% url 'sale_list' %}" class="btn btn-secondary btn-sm">
+                    Annuler
+                </a>
+
+                <button type="submit" class="btn btn-success px-4 btn-sm">
+                    <i class="bi bi-check-circle"></i> Enregistrer la vente
+                </button>
+            </div>
+        </form>
+      </div>
+    </div>
+    <!-- partial -->
+  </div>
+  <!-- main-panel ends -->
+{% endblock %}

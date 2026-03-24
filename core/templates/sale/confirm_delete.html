@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}
+  Supprimer la vente #{{ sale.id }} ?
+{% endblock %}
+{% block content %}
+{% load humanize %}
+<!-- Begin Page Content -->
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <div class="card shadow-lg border-danger">
+        <div class="card-header bg-danger text-white">
+            Confirmer la suppression
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                <h6 class="m-0 font-weight-bold text-primary">
+                    Voulez-vous supprimer la vente #{{ sale.id }} ?
+                </h6>
+                <br><br>
+                <button type="submit" class="btn btn-outline-danger btn-sm">Oui, supprimer</button>
+                <a href="{% url 'sale_list' %}" class="btn btn-outline-secondary btn-sm">Annuler</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

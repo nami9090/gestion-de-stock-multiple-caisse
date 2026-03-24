@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+  Sortie Stock
+{% endblock %}
+{% block content %}
+  <!-- partial -->
+<div class="container-fluid main-panel">
+  <div class='card shadow-lg mb-3'>
+    <div class='card-header bg-primary text-white m-0 font-weight-bold text-white'>
+      Nouvelle Sortie Stock
+    </div>
+  </div>
+  <div class="card shadow">
+      <div class="card-header">
+          Entrée Stock
+      </div>
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+      <div class="card-body">
+          <form method="POST">
+              {% csrf_token %}
+              {{ form.as_p }}
+              <button class="btn btn-outline-primary btn-sm">Valider sortie</button>
+              <a href="{% url 'stock_exit_list' %}" class="btn btn-outline-secondary btn-sm">Retour</a>
+          </form>
+      </div>
+  </div>
+</div>
+  <!-- main-panel ends -->
+{% endblock %}

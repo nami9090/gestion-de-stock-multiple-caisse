@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}
+	Rapport hebdomadaire
+{% endblock %}
+{% block content %}
+{% load humanize %}
+<div class="container-fluid">
+	<h4 class="mb-3">
+        Rapport Hebdomadaire
+        <small class="text-muted">
+            {{ start_week }} - {{ end_week }}
+        </small>
+    </h4>
+    <br><br>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <div class="card shadow text-center">
+                <div class="card-body">
+                    <h6>Total ventes</h6>
+                    <h3>{{ total_ventes }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow text-center">
+                <div class="card-body">
+                    <h6>Montant total</h6>
+                    <h3>{{ total_montant|intcomma }} {{company.currency}}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+	<div class="card">
+		<div class="card-header">
+			Rapport Hebdomadaire de vente
+		</div>
+		<div class="card-body">
+			<div class="table-responsive">
+				<table class="table table-sm table-bordered">
+					<thead class="table-dark">
+					    <tr>
+					        <th>Date</th>
+					        <th>Caissier</th>
+					        <th>Montant</th>
+					    </tr>
+					</thead>
+					<tbody>
+					    {% for sale in ventes %}
+					    <tr>
+			                <td>{{ sale.created_at|date:"d/m/Y H:i" }}</td>
+			                <td>{{ sale.register.name }}</td>
+			                <td>{{ sale.total_amount|intcomma }} {{company.currency}}</td>
+			            </tr>
+					    {% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
