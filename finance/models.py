@@ -34,7 +34,7 @@ class Cashier(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone = models.CharField(max_length=20, blank=True, null=True)
     is_active = models.BooleanField(default=True)
-    cash_registers = models.ManyToManyField(CashRegister, blank=True, related_name='cashiers', null=True)
+    cash_registers = models.ManyToManyField(CashRegister, blank=True, related_name='cashiers')
 
     created_at = models.DateTimeField(auto_now_add=True)
 
